@@ -2,10 +2,6 @@
 LiDAR-based 3D obstacle detection using RANSAC ground removal and DBSCAN clustering on the nuScenes Mini dataset.
 
 
-# LiDAR-Based 3D Obstacle Detection
-
-A Python project implementing a basic 3D obstacle detection pipeline using LiDAR point clouds from the nuScenes Mini dataset (Boston Seaport, USA).
-
 ## Overview
 
 The project uses classical point cloud processing techniques to identify potential obstacles in driving scenes.
