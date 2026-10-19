@@ -60,20 +60,10 @@ print("Number of samples:", len(nusc.sample))
 
 
 def load_lidar_scan(sample):
-    """
-    Load one LiDAR scan from a nuScenes sample.
 
-    Returns:
-        xyz: 3D coordinates of the points.
-        pcd: Open3D point cloud.
-    """
+   lidar_token = sample["data"]["LIDAR_TOP"]
 
-   
-    lidar_token = sample["data"]["LIDAR_TOP"]
-
-
-
-    lidar_path = nusc.get_sample_data_path(lidar_token)
+   lidar_path = nusc.get_sample_data_path(lidar_token)
 
  
 
@@ -94,15 +84,7 @@ def load_lidar_scan(sample):
 
 
 def remove_ground(pcd):
-    """
-    Estimate the dominant plane using RANSAC.
-
-    Returns:
-        ground: points belonging to the estimated plane.
-        obstacles: points not belonging to that plane.
-        plane_model: coefficients of the estimated plane.
-    """
-
+    
     plane_model, inliers = pcd.segment_plane(
         distance_threshold=RANSAC_DISTANCE_THRESHOLD,
         ransac_n=RANSAC_N,
@@ -125,17 +107,10 @@ def remove_ground(pcd):
 
 
 def cluster_obstacles(obstacles):
-    """
-    Group non-ground points using DBSCAN.
-
-    Returns:
-        obstacle_points: NumPy array of 3D coordinates.
-        labels: Cluster label assigned to every point.
-    """
+   
 
     obstacle_points = np.asarray(obstacles.points)
 
-    # Handle the unusual case where no points remain.
 
     if len(obstacle_points) == 0:
         return obstacle_points, np.array([], dtype=int)
@@ -159,8 +134,7 @@ def detect_clusters(obstacle_points, labels):
     if len(labels) == 0:
         return detections
 
-    # DBSCAN assigns -1 to noise points.
-    # We do not create boxes for noise points.
+
 
     cluster_labels = sorted(set(labels) - {-1})
 
@@ -212,12 +186,8 @@ def detect_clusters(obstacle_points, labels):
 
 
 def visualize_results(pcd, ground, obstacles, detections):
-    """
-    Display the original point cloud, ground removal,
-    and detected clusters with bounding boxes.
-    """
+    
 
-    # ----- Original point cloud -----
 
     print("\nDisplaying original LiDAR point cloud...")
 
@@ -228,7 +198,7 @@ def visualize_results(pcd, ground, obstacles, detections):
         height=720
     )
 
-    # ----- Ground removal -----
+  
 
     ground.paint_uniform_color([0.5, 0.5, 0.5])
 
@@ -243,7 +213,7 @@ def visualize_results(pcd, ground, obstacles, detections):
         height=720
     )
 
-    # ----- Final detection results -----
+
 
     geometries = []
 
@@ -356,9 +326,6 @@ def process_scan(sample, visualize=False):
 
 
 def evaluate_algorithm():
-    """
-    Evaluate the pipeline on several nuScenes samples.
-    """
 
     number_of_scans = min(
         NUMBER_OF_EVALUATION_SCANS,
